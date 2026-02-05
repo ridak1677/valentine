@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Valentine?</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background-color: #ffd6ea;
+  background-image:
+    radial-gradient(circle, rgba(255,105,180,0.35) 6px, transparent 7px);
+  background-size: 80px 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Comic Sans MS", cursive;
+  overflow: hidden;
+}
+
+.container {
+  text-align: center;
+  z-index: 10;
+}
+
+h1 {
+  font-size: 3rem;
+  color: #fff;
+  text-shadow: 2px 2px 10px hotpink;
+}
+
+#finalText {
+  display: none;
+  font-size: 2.5rem;
+  color: #fff;
+  text-shadow: 2px 2px 8px deeppink;
+  margin-top: 20px;
+}
+
+#message {
+  display: none;
+  font-size: 1.5rem;
+  color: #ff005d;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+button {
+  font-size: 1.5rem;
+  padding: 14px 36px;
+  margin: 12px;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+}
+
+#yes {
+  background: #fff0f6;
+  color: #ff2f92;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+#no {
+  background: #ff4f7b;
+  color: white;
+  position: absolute;
+}
+
+.hearts {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.heart {
+  position: absolute;
+  font-size: 26px;
+  animation: rain 4s linear forwards;
+}
+
+@keyframes rain {
+  0% { transform: translateY(-10vh); opacity: 1; }
+  100% { transform: translateY(110vh); opacity: 0; }
+}
+
+.burst {
+  animation: burst 1s ease-out forwards;
+}
+
+@keyframes burst {
+  from { transform: translate(0,0) scale(0.5); opacity: 1; }
+  to {
+    transform: translate(var(--x), var(--y)) scale(1.5);
+    opacity: 0;
+  }
+}
+
+#cat {
+  display: none;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1 id="question">Will you be my Valentine Mr. Umag Jain? 💖</h1>
+
+  <button id="yes">YES 💕</button>
+  <button id="no">NO 💔</button>
+
+  <div id="message">Stopppppp click YES!! 😠</div>
+
+  <div id="finalText">You are stuck with me 💖</div>
+
+  <div id="cat">
+    <img 
+      src="https://media.tenor.com/2roX3uxz_68AAAAC/cat-dance.gif" 
+      alt="Dancing Cat"
+      width="250"
+    >
+  </div>
+</div>
+
+<div class="hearts" id="hearts"></div>
+
+<script>
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const message = document.getElementById("message");
+const hearts = document.getElementById("hearts");
+const cat = document.getElementById("cat");
+const question = document.getElementById("question");
+const finalText = document.getElementById("finalText");
+
+let scale = 1;
+let raining = false;
+
+function moveNo() {
+  scale -= 0.12;
+  if (scale <= 0.25) {
+    scale = 0.25;
+    message.style.display = "block";
+  }
+
+  noBtn.style.left = Math.random() * (window.innerWidth - 120) + "px";
+  noBtn.style.top = Math.random() * (window.innerHeight - 60) + "px";
+  noBtn.style.transform = `scale(${scale})`;
+}
+
+noBtn.addEventListener("mouseover", moveNo);
+noBtn.addEventListener("click", moveNo);
+
+function rainHearts() {
+  if (raining) return;
+  raining = true;
+
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = Math.random() * 20 + 20 + "px";
+    hearts.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 4000);
+  }, 180);
+}
+
+yesBtn.addEventListener("click", () => {
+  question.style.display = "none";
+  yesBtn.style.display = "none";
+  noBtn.style.display = "none";
+  message.style.display = "none";
+
+  finalText.style.display = "block";
+  cat.style.display = "block";
+
+  // Burst hearts
+  for (let i = 0; i < 40; i++) {
+    const burst = document.createElement("div");
+    burst.className = "heart burst";
+    burst.innerText = "💖";
+    burst.style.left = "50vw";
+    burst.style.top = "50vh";
+    burst.style.setProperty("--x", `${(Math.random()-0.5)*600}px`);
+    burst.style.setProperty("--y", `${(Math.random()-0.5)*600}px`);
+    hearts.appendChild(burst);
+    setTimeout(() => burst.remove(), 1000);
+  }
+
+  rainHearts();
+});
+</script>
+
+</body>
+</html>
